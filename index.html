@@ -252,21 +252,24 @@ function submitForm() {
     return;
   }
 
-  var btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Yuborilmoqda...';
-
-  var url = SCRIPT_URL + '?phone=' + encodeURIComponent(raw.trim());
-
   // Pixel Lead event
   try { fbq('track', 'Lead'); } catch(e) {}
- 
-  // Background da yuborish — kutmasdan
+
   var url = SCRIPT_URL + '?phone=' + encodeURIComponent(raw.trim());
-  fetch(url, { method: 'GET', mode: 'no-cors' }).catch(function(){});
- 
-  // Darhol redirect
-  window.location.href = 'telegram.html';
+
+  // sendBeacon — sahifa yopilsa ham ishonchli yuboradi (mobilda eng yaxshi)
+  var sent = false;
+  if (navigator.sendBeacon) {
+    sent = navigator.sendBeacon(url);
+  }
+  if (!sent) {
+    fetch(url, { method: 'GET', mode: 'no-cors' }).catch(function(){});
+  }
+
+  // 400ms kutish — so'rov jo'nab ulgusin, keyin redirect
+  setTimeout(function() {
+    window.location.href = 'telegram.html';
+  }, 400);
 }
 </script>
 

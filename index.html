@@ -257,19 +257,28 @@ function submitForm() {
 
   var url = SCRIPT_URL + '?phone=' + encodeURIComponent(raw.trim());
 
-  // sendBeacon — sahifa yopilsa ham ishonchli yuboradi (mobilda eng yaxshi)
-  var sent = false;
-  if (navigator.sendBeacon) {
-    sent = navigator.sendBeacon(url);
-  }
-  if (!sent) {
-    fetch(url, { method: 'GET', mode: 'no-cors' }).catch(function(){});
+  // Tugmani bloklash — ikki marta bosilmasin
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+
+  // Redirect funksiyasi
+  function goNext() {
+    window.location.href = 'telegram.html';
   }
 
-  // 400ms kutish — so'rov jo'nab ulgusin, keyin redirect
-  setTimeout(function() {
-    window.location.href = 'telegram.html';
-  }, 400);
+  // 5 soniya ichida javob kelmasa ham o'tib ketsin
+  var timer = setTimeout(goNext, 5000);
+
+  // GET fetch — Google Apps Script GET talab qiladi
+  fetch(url, { method: 'GET', mode: 'no-cors' })
+    .then(function() {
+      clearTimeout(timer);
+      goNext();
+    })
+    .catch(function() {
+      clearTimeout(timer);
+      goNext();
+    });
 }
 </script>
 

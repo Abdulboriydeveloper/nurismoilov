@@ -263,9 +263,7 @@ function submitForm() {
     // Pixel Lead event
     try { fbq('track', 'Lead'); } catch(e) {}
     // 300ms kutib redirect — pixel ulgurib yuborsin
-    setTimeout(function() {
       window.location.href = 'telegram.html';
-    }, 100);
   }
 
   fetch(url, { method: 'GET', mode: 'no-cors' })

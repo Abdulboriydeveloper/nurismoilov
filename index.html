@@ -258,17 +258,15 @@ function submitForm() {
 
   var url = SCRIPT_URL + '?phone=' + encodeURIComponent(raw.trim());
 
-  // Lead eventini yuborish va keyin redirect
-  function doRedirect() {
-    // Pixel Lead event
-    try { fbq('track', 'Lead'); } catch(e) {}
-    // 300ms kutib redirect — pixel ulgurib yuborsin
-      window.location.href = 'telegram.html';
-  }
-
-  fetch(url, { method: 'GET', mode: 'no-cors' })
-    .then(function() { doRedirect(); })
-    .catch(function() { doRedirect(); });
+  // Pixel Lead event
+  try { fbq('track', 'Lead'); } catch(e) {}
+ 
+  // Background da yuborish — kutmasdan
+  var url = SCRIPT_URL + '?phone=' + encodeURIComponent(raw.trim());
+  fetch(url, { method: 'GET', mode: 'no-cors' }).catch(function(){});
+ 
+  // Darhol redirect
+  window.location.href = 'telegram.html';
 }
 </script>
 
